@@ -1,10 +1,7 @@
 package main
  
 import (
-    "os"
-    "fmt"
     "encoding/json"
-    "log"
     "net/http"
     "github.com/gorilla/mux"
     "github.com/vikstrous/zengge-lightcontrol/control"
@@ -121,29 +118,4 @@ func SetPowerByMacCommand(w http.ResponseWriter, req *http.Request) {
 
     json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
-
-func main() {
-    router := mux.NewRouter()
-
-    // get device ID as command line parameter
-    if len(os.Args) < 2 {
-        fmt.Println("Please specify a device ID")
-        return
-    }
-    devID := os.Args[1]
-
-    // new controller, log in
-    rc = remote.NewController("http://wifi.magichue.net/WebMagicHome/ZenggeCloud/ZJ002.ashx", "8ff3e30e071c9ef5b304d83239d0c707", devID)
-    rc.Login()
-
-    router.HandleFunc("/ctrl/get-devices", GetDevicesCommand).Methods("GET")
-    router.HandleFunc("/ctrl/register/{mac}", RegisterDeviceCommand).Methods("GET")
-    router.HandleFunc("/ctrl/deregister/{mac}", DeregisterDeviceCommand).Methods("GET")
-    router.HandleFunc("/bulb/color/{mac}/{color}", ChangeColorByMacCommand).Methods("GET")
-    router.HandleFunc("/bulb/power/{mac}/{state}", SetPowerByMacCommand).Methods("GET")
-
-    // fmt.Printf("Server running on port 8010\n")
-    // log.Fatal(http.ListenAndServe(":8010", router))
-}
-
 
