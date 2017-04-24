@@ -12,11 +12,6 @@ import (
 var rc *remote.Controller
 var controller *control.Controller
 
-type Bulb struct {
-    MAC     string      `json:"mac"`
-    i       int         `json:"int"`
-}
-
 type ErrReponse struct {
     Err      string        `json:"err"`
 }
@@ -25,7 +20,17 @@ type SuccessResponse struct {
     OK       bool           `json:"OK"`
 }
 
-var bulbs []Bulb
+func _checkBulbState () string {
+    state, err := controller.GetState()
+    ctrl_err := ""
+
+    if err != nil {
+        ctrl_err = err.Error()
+    } else if !state.IsOn {
+        ctrl_err = "Bulb is not on"
+    }
+    return ctrl_err
+}
 
 func GetDevicesCommand(w http.ResponseWriter, req *http.Request) {
     devices, err := rc.GetDevices()
@@ -85,6 +90,13 @@ func ChangeColorByMacCommand(w http.ResponseWriter, req *http.Request) {
     // set controller to this remote operator
     remote_ := remote.NewRemoteTransport(rc, mac)
     controller = &control.Controller{remote_}
+    
+    ctrl_err := _checkBulbState()
+    if ctrl_err != "" {
+        json.NewEncoder(w).Encode(ErrReponse{Err: ctrl_err})
+        return 
+    }
+
     controller.SetColor(*color)
 
     resp := SuccessResponse{OK: true}
@@ -106,8 +118,14 @@ func SetPowerByMacCommand(w http.ResponseWriter, req *http.Request) {
     }
 
     // set controller to this remote operator
-    remote_ := remote.NewRemoteTransport(rc, params["mac"] )
+    remote_ := remote.NewRemoteTransport(rc, params["mac"])
     controller = &control.Controller{remote_}
+
+    ctrl_err := _checkBulbState()
+    if ctrl_err != "" {
+        json.NewEncoder(w).Encode(ErrReponse{Err: ctrl_err})
+        return 
+    }
 
     if params["state"] == "ON" {
         controller.SetPower(true)
@@ -118,4 +136,18 @@ func SetPowerByMacCommand(w http.ResponseWriter, req *http.Request) {
 
     json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
+
+func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
+    params := mux.Vars(req)
+    if params["color"] == "" {
+        json.NewEncoder(w).Encode(ErrReponse{Err: "Invalid color"})
+        return
+    }
+
+    json.NewEncoder(w).Encode(ErrReponse{Err: "Unimplemented"})
+
+    // put color on queue
+}
+
+
 

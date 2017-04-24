@@ -24,6 +24,7 @@ func main() {
     rc.Login()
 
     // API
+    router.HandleFunc("/send-mood/{color}", SendMoodCommand).Methods("GET")
     router.HandleFunc("/ctrl/get-devices", GetDevicesCommand).Methods("GET")
     router.HandleFunc("/ctrl/register/{mac}", RegisterDeviceCommand).Methods("GET")
     router.HandleFunc("/ctrl/deregister/{mac}", DeregisterDeviceCommand).Methods("GET")
