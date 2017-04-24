@@ -142,8 +142,8 @@ func main() {
     router.HandleFunc("/bulb/color/{mac}/{color}", ChangeColorByMacCommand).Methods("GET")
     router.HandleFunc("/bulb/power/{mac}/{state}", SetPowerByMacCommand).Methods("GET")
 
-    fmt.Printf("Server running on port 8010\n")
-    log.Fatal(http.ListenAndServe(":8010", router))
+    // fmt.Printf("Server running on port 8010\n")
+    // log.Fatal(http.ListenAndServe(":8010", router))
 }
 
 
