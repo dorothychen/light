@@ -1,0 +1,31 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "eCBHaFtMiLmJjvYgxv7wUBnED2c=",
+			"path": "github.com/andelf/go-curl",
+			"revision": "f8b334df3789fbdf98df3b3b22815e958b956c19",
+			"revisionTime": "2017-01-11T14:06:32Z"
+		},
+		{
+			"checksumSHA1": "zmCk+lgIeiOf0Ng9aFP9aFy8ksE=",
+			"path": "github.com/gorilla/mux",
+			"revision": "599cba5e7b6137d46ddf58fb1765f5d928e69604",
+			"revisionTime": "2017-02-28T22:43:54Z"
+		},
+		{
+			"checksumSHA1": "gl4b04qrtBBOWZFVt1Zf5eRkVDs=",
+			"path": "github.com/vikstrous/zengge-lightcontrol/control",
+			"revision": "6613d030df9fdbfb24debdf69d36787067d0cddb",
+			"revisionTime": "2017-01-04T04:25:03Z"
+		},
+		{
+			"checksumSHA1": "1vDvJAGML3U2DpagkxhpkVzVHKI=",
+			"path": "github.com/vikstrous/zengge-lightcontrol/remote",
+			"revision": "6613d030df9fdbfb24debdf69d36787067d0cddb",
+			"revisionTime": "2017-01-04T04:25:03Z"
+		}
+	],
+	"rootPath": "light"
+}
