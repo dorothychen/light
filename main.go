@@ -48,6 +48,11 @@ func getConfigVars () bool {
 }
 
 func main() {
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "9090"
+    }
+
     router := mux.NewRouter()
     config_vars = &ConfigVars{}
 
@@ -76,8 +81,8 @@ func main() {
     router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
     http.Handle("/", router)
 
-    fmt.Printf("Attempting to run server running on port 9090\n")
-    err := http.ListenAndServe(":9090", router) 
+    fmt.Printf("Attempting to run server running on port " + port + "\n")
+    err := http.ListenAndServe(":" + port, router) 
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
     }    
