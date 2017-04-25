@@ -1,1 +1,1 @@
-web: ./light
+web: light
