@@ -28,7 +28,7 @@ type ConfigVars struct {
 var config_vars *ConfigVars
 var IS_LIVE bool
 
-func getConfigVars () bool {
+func getConfigVarsLocal () bool {
     easy := curl.EasyInit()
     defer easy.Cleanup()
 
@@ -39,7 +39,6 @@ func getConfigVars () bool {
         if err := json.Unmarshal(buf, config_vars); err != nil {
             panic(err)
         }
-        fmt.Printf("%+v\n", *config_vars)
         return true
     }
 
@@ -57,6 +56,18 @@ func getConfigVars () bool {
 }
 
 
+func getConfigVarsProd () bool {
+    config_vars.DATABASE_URL = os.Getenv("DATABASE_URL")
+    config_vars.DevID = os.Getenv("devID")
+    config_vars.Mac1 = os.Getenv("mac1") 
+    config_vars.Mac2 = os.Getenv("mac2")
+    config_vars.Mac3 = os.Getenv("mac3")
+    config_vars.Mac4 = os.Getenv("mac4")
+    config_vars.Ticker_Key = os.Getenv("ticker_key")
+
+    return true
+}
+
 func main() {
     port := os.Getenv("PORT")
     if port == "" {
@@ -66,24 +77,21 @@ func main() {
     router := mux.NewRouter()
     config_vars = &ConfigVars{}
 
-    // get device ID as command line parameter
-    if len(os.Args) < 2 {
-        getConfigVars()
+    // get config vars
+    db_url := os.Getenv("DATABASE_URL")
+    if db_url == "" {
+        getConfigVarsLocal()
     } else {
-        config_vars.DevID = os.Args[1]
+        getConfigVarsProd()
     }
-    
+    fmt.Printf("%+v\n", *config_vars)
+
     // new controller, log in
     _remoteLogin()
 
     // database
-    db_url := os.Getenv("DATABASE_URL")
-    if db_url == "" {
-        db_url = config_vars.DATABASE_URL
-    }
-
     var sql_err error
-    db, sql_err = sql.Open("postgres", db_url)
+    db, sql_err = sql.Open("postgres", config_vars.DATABASE_URL)
     if sql_err != nil {
         log.Fatal(sql_err)
     }
