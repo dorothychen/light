@@ -1,10 +1,13 @@
 function validateColor(col) {
+    if (col.length != 6) {
+        return false;
+    }
     return true;
 }
 
-function sendRequest() {
+function sendRequest(c) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/send-mood/{color}');
+    xhr.open('GET', '/send-mood/' + c);
     xhr.onload = function() {
         if (xhr.status === 200) {
             console.log("success")
@@ -17,10 +20,10 @@ function sendRequest() {
 }
 
 function submitColor() {
-    var col = document.getElementById("color-hex-input").value;
-    if (!validateColor(col)) {
+    var c = document.getElementById("color-hex-input").value;
+    if (!validateColor(c)) {
         return false;
     }
 
-    sendRequest();
+    sendRequest(c);
 }

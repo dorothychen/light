@@ -1,16 +1,21 @@
 package main
  
 import (
+    "fmt"
     "encoding/json"
     "net/http"
     "github.com/gorilla/mux"
     "github.com/vikstrous/zengge-lightcontrol/control"
     "github.com/vikstrous/zengge-lightcontrol/remote"
+
+    _ "github.com/lib/pq"
+    "database/sql"
 )
 
 
 var rc *remote.Controller
 var controller *control.Controller
+var db *sql.DB
 
 type ErrReponse struct {
     Err      string        `json:"err"`
@@ -31,6 +36,7 @@ func _checkBulbState () string {
     }
     return ctrl_err
 }
+
 
 func GetDevicesCommand(w http.ResponseWriter, req *http.Request) {
     devices, err := rc.GetDevices()
@@ -143,10 +149,17 @@ func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
         json.NewEncoder(w).Encode(ErrReponse{Err: "Invalid color"})
         return
     }
-
-    json.NewEncoder(w).Encode(ErrReponse{Err: "Unimplemented"})
-
+    
     // put color on queue
+    var retColor string
+    err := db.QueryRow(`INSERT INTO colors(timestamp, color) VALUES (CURRENT_TIMESTAMP, $1) RETURNING color;`, params["color"]).Scan(&retColor)
+    if err != nil {
+        // TODOOOO handle err
+        json.NewEncoder(w).Encode(err)
+        return
+    }
+
+    // TODOOOO handle success
 }
 
 

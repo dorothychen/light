@@ -1,3 +1,3 @@
 ## Lights
 
-Usage: `go run main.go api.go <device ID>`
+Usage: `go run main.go api.go`

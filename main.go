@@ -9,12 +9,20 @@ import (
     curl "github.com/andelf/go-curl"
     "github.com/gorilla/mux"
     "github.com/vikstrous/zengge-lightcontrol/remote"
+
+    _ "github.com/lib/pq"
+    "database/sql"
 )
 
 
 
 type ConfigVars struct {
+    DATABASE_URL    string  `json:"database_url"`
     DevID       string      `json:"devID"`
+    Mac1        string      `json:"mac1"`
+    Mac2        string      `json:"mac2"`
+    Mac3        string      `json:"mac3"`
+    Mac4        string      `json:"mac4"`    
 }
 
 var config_vars *ConfigVars
@@ -30,11 +38,11 @@ func getConfigVars () bool {
         if err := json.Unmarshal(buf, config_vars); err != nil {
             panic(err)
         }
-        fmt.Printf("%+v", *config_vars)
+        fmt.Printf("%+v\n", *config_vars)
         return true
     }
 
-    easy.Setopt(curl.OPT_URL, "https://api.heroku.com/apps/vast-crag-43585/config-vars")
+    easy.Setopt(curl.OPT_URL, "https://api.heroku.com/apps/feelingcolor/config-vars")
     easy.Setopt(curl.OPT_NETRC, curl.NETRC_REQUIRED)
     easy.Setopt(curl.OPT_HTTPHEADER, []string{"Accept: application/vnd.heroku+json; version=3"})
     easy.Setopt(curl.OPT_WRITEFUNCTION, respSuccess)
@@ -58,8 +66,6 @@ func main() {
 
     // get device ID as command line parameter
     if len(os.Args) < 2 {
-        // fmt.Println("Please specify a device ID")
-        // return
         getConfigVars()
     } else {
         config_vars.DevID = os.Args[1]
@@ -68,6 +74,18 @@ func main() {
     // new controller, log in
     rc = remote.NewController("http://wifi.magichue.net/WebMagicHome/ZenggeCloud/ZJ002.ashx", "8ff3e30e071c9ef5b304d83239d0c707", config_vars.DevID)
     rc.Login()
+
+    // database
+    db_url := os.Getenv("DATABASE_URL")
+    if db_url == "" {
+        db_url = config_vars.DATABASE_URL
+    }
+    
+    var sql_err error
+    db, sql_err = sql.Open("postgres", db_url)
+    if sql_err != nil {
+        log.Fatal(sql_err)
+    }
 
     // API
     router.HandleFunc("/send-mood/{color}", SendMoodCommand).Methods("GET")
