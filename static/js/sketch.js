@@ -90,7 +90,8 @@ function sendRequest(c) {
     xhr.open('GET', '/send-mood/' + c);
     xhr.onload = function() {
         if (xhr.status === 200) {
-            console.log("success")
+            console.log("success");
+	    window.location.href = 'thanks.html';
         }
         else {
             console.log('Request failed. Returned status of ' + xhr.status);
