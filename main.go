@@ -84,7 +84,7 @@ func main() {
     } else {
         getConfigVarsProd()
     }
-    fmt.Printf("%+v\n", *config_vars)
+    // fmt.Printf("%+v\n", *config_vars)
 
     // new controller, log in
     _remoteLogin()

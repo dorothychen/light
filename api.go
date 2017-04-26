@@ -1,7 +1,6 @@
 package main
  
 import (
-    "fmt"
     "encoding/json"
     "net/http"
     "github.com/gorilla/mux"
@@ -182,12 +181,8 @@ func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
 }
 
 func StartTickerCommand(w http.ResponseWriter, req *http.Request) {
-    fmt.Println("SDJFLSJFLJFSLDKFJHIIIIIIIIIIIII")
-
     params := mux.Vars(req)
     if params["key"] != config_vars.Ticker_Key {
-        fmt.Println(params["key"])
-        fmt.Println(config_vars.Ticker_Key)
         json.NewEncoder(w).Encode(ErrReponse{Err: "Incorrect key"})
         return
     }
