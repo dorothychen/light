@@ -182,6 +182,8 @@ func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
 }
 
 func StartTickerCommand(w http.ResponseWriter, req *http.Request) {
+    fmt.Println("SDJFLSJFLJFSLDKFJHIIIIIIIIIIIII")
+
     params := mux.Vars(req)
     if params["key"] != config_vars.Ticker_Key {
         fmt.Printf(params["key"])
@@ -190,6 +192,8 @@ func StartTickerCommand(w http.ResponseWriter, req *http.Request) {
     }
 
     startTicker()
+    json.NewEncoder(w).Encode(SuccessResponse{OK: true})
+
 }
 
 func StopTickerCommand(w http.ResponseWriter, req *http.Request) {
@@ -200,6 +204,7 @@ func StopTickerCommand(w http.ResponseWriter, req *http.Request) {
     }
 
     stopTicker()
+    json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
 
 
