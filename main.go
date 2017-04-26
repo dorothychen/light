@@ -8,7 +8,6 @@ import (
     "encoding/json"
     curl "github.com/andelf/go-curl"
     "github.com/gorilla/mux"
-    "github.com/vikstrous/zengge-lightcontrol/remote"
 
     _ "github.com/lib/pq"
     "database/sql"
@@ -17,7 +16,7 @@ import (
 
 
 type ConfigVars struct {
-    DATABASE_URL    string  `json:"database_url"`
+    DATABASE_URL    string  `json:"DATABASE_URL"`
     DevID       string      `json:"devID"`
     Mac1        string      `json:"mac1"`
     Mac2        string      `json:"mac2"`
@@ -55,6 +54,7 @@ func getConfigVars () bool {
     return true
 }
 
+
 func main() {
     port := os.Getenv("PORT")
     if port == "" {
@@ -72,15 +72,14 @@ func main() {
     }
     
     // new controller, log in
-    rc = remote.NewController("http://wifi.magichue.net/WebMagicHome/ZenggeCloud/ZJ002.ashx", "8ff3e30e071c9ef5b304d83239d0c707", config_vars.DevID)
-    rc.Login()
+    _remoteLogin()
 
     // database
     db_url := os.Getenv("DATABASE_URL")
     if db_url == "" {
         db_url = config_vars.DATABASE_URL
     }
-    
+
     var sql_err error
     db, sql_err = sql.Open("postgres", db_url)
     if sql_err != nil {
@@ -89,15 +88,23 @@ func main() {
 
     // API
     router.HandleFunc("/send-mood/{color}", SendMoodCommand).Methods("GET")
-    router.HandleFunc("/ctrl/get-devices", GetDevicesCommand).Methods("GET")
-    router.HandleFunc("/ctrl/register/{mac}", RegisterDeviceCommand).Methods("GET")
-    router.HandleFunc("/ctrl/deregister/{mac}", DeregisterDeviceCommand).Methods("GET")
     router.HandleFunc("/bulb/color/{mac}/{color}", ChangeColorByMacCommand).Methods("GET")
     router.HandleFunc("/bulb/power/{mac}/{state}", SetPowerByMacCommand).Methods("GET")
+
+    // only expose if running localhost
+    if os.Getenv("DATABASE_URL") == "" {
+        router.HandleFunc("/ctrl/login", RemoteLoginCommand).Methods("GET")
+        router.HandleFunc("/ctrl/get-devices", GetDevicesCommand).Methods("GET")
+        router.HandleFunc("/ctrl/register/{mac}", RegisterDeviceCommand).Methods("GET")
+        router.HandleFunc("/ctrl/deregister/{mac}", DeregisterDeviceCommand).Methods("GET")
+    }
 
     // HTML
     router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
     http.Handle("/", router)
+
+    // start ticker for updating colors
+    // startTicker()
 
     fmt.Printf("Attempting to run server running on port " + port + "\n")
     err := http.ListenAndServe(":" + port, router) 

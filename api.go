@@ -1,7 +1,6 @@
 package main
  
 import (
-    "fmt"
     "encoding/json"
     "net/http"
     "github.com/gorilla/mux"
@@ -35,6 +34,15 @@ func _checkBulbState () string {
         ctrl_err = "Bulb is not on"
     }
     return ctrl_err
+}
+
+func RemoteLoginCommand(w http.ResponseWriter, req *http.Request) {
+    _remoteLogin()
+}
+
+func _remoteLogin() {
+    rc = remote.NewController("http://wifi.magichue.net/WebMagicHome/ZenggeCloud/ZJ002.ashx", "8ff3e30e071c9ef5b304d83239d0c707", config_vars.DevID)
+    rc.Login()
 }
 
 
@@ -87,10 +95,22 @@ func ChangeColorByMacCommand(w http.ResponseWriter, req *http.Request) {
 
     mac := params["mac"]
     color_str := params["color"]
+
+    err_color := _changeColorByMac(mac, color_str)
+    if err_color != nil {
+        json.NewEncoder(w).Encode(err_color)
+        return
+    }
+
+    resp := SuccessResponse{OK: true}
+    json.NewEncoder(w).Encode(resp)
+}
+
+func _changeColorByMac(mac string, color_str string) (err *ErrReponse) {
     color := control.ParseColorString(color_str)
     if color == nil {
-        json.NewEncoder(w).Encode(ErrReponse{Err: "Invalid color"})
-        return
+        err := &ErrReponse{Err: "Invalid color"}
+        return err
     }
 
     // set controller to this remote operator
@@ -99,14 +119,12 @@ func ChangeColorByMacCommand(w http.ResponseWriter, req *http.Request) {
     
     ctrl_err := _checkBulbState()
     if ctrl_err != "" {
-        json.NewEncoder(w).Encode(ErrReponse{Err: ctrl_err})
-        return 
+        err := &ErrReponse{Err: ctrl_err}
+        return err
     }
 
-    controller.SetColor(*color)
-
-    resp := SuccessResponse{OK: true}
-    json.NewEncoder(w).Encode(resp)
+    controller.SetColor(*color)  
+    return nil
 }
 
 func SetPowerByMacCommand(w http.ResponseWriter, req *http.Request) {
@@ -159,7 +177,7 @@ func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
         return
     }
 
-    // TODOOOO handle success
+    json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
 
 
