@@ -65,6 +65,45 @@ function mouseClicked(){
 	makeMood();
 }
 
+//hsb to rgb to hex
 function submit() {
   print("HSB: " + uH + " ," + uS + ", " + uB);
+  var c = color(uH, uS, uB);
+  var r = round(red(c));
+  var g = round(green(c));
+  var b = round(blue(c));
+  print("RGB: " + r + ", " + g + ", " + b);
+  var hex = r.toString(16) + g.toString(16) + b.toString(16);
+  print("hex: " + hex);
+  submitColor(hex);
+}
+
+function validateColor(col) {
+    if (col.length != 6) {
+        return false;
+    }
+    return true;
+}
+
+function sendRequest(c) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/send-mood/' + c);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log("success")
+        }
+        else {
+            console.log('Request failed. Returned status of ' + xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+function submitColor(hex) {
+    var c = hex;
+    if (!validateColor(c)) {
+        return false;
+    }
+
+    sendRequest(c);
 }
