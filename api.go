@@ -186,7 +186,8 @@ func StartTickerCommand(w http.ResponseWriter, req *http.Request) {
 
     params := mux.Vars(req)
     if params["key"] != config_vars.Ticker_Key {
-        fmt.Printf(params["key"])
+        fmt.Println(params["key"])
+        fmt.Println(config_vars.Ticker_Key)
         json.NewEncoder(w).Encode(ErrReponse{Err: "Incorrect key"})
         return
     }
