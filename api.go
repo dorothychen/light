@@ -180,5 +180,24 @@ func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
     json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
 
+func StartTickerCommand(w http.ResponseWriter, req *http.Request) {
+    params := mux.Vars(req)
+    if params["key"] != config_vars.Ticker_Key {
+        json.NewEncoder(w).Encode(ErrReponse{Err: "Incorrect key"})
+        return
+    }
+
+    startTicker()
+}
+
+func StopTickerCommand(w http.ResponseWriter, req *http.Request) {
+    params := mux.Vars(req)
+    if params["key"] != config_vars.Ticker_Key {
+        json.NewEncoder(w).Encode(ErrReponse{Err: "Incorrect key"})
+        return
+    }
+    
+    stopTicker()
+}
 
 

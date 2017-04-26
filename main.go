@@ -22,9 +22,11 @@ type ConfigVars struct {
     Mac2        string      `json:"mac2"`
     Mac3        string      `json:"mac3"`
     Mac4        string      `json:"mac4"`    
+    Ticker_Key  string      `json:"ticker_key"`
 }
 
 var config_vars *ConfigVars
+var IS_LIVE bool
 
 func getConfigVars () bool {
     easy := curl.EasyInit()
@@ -90,9 +92,14 @@ func main() {
     router.HandleFunc("/send-mood/{color}", SendMoodCommand).Methods("GET")
     router.HandleFunc("/bulb/color/{mac}/{color}", ChangeColorByMacCommand).Methods("GET")
     router.HandleFunc("/bulb/power/{mac}/{state}", SetPowerByMacCommand).Methods("GET")
+    router.HandleFunc("/ctrl/start/{key}", StartTickerCommand).Methods("GET")
+    router.HandleFunc("/ctrl/stop/{key}", StopTickerCommand).Methods("GET")
 
     // only expose if running localhost
     if os.Getenv("DATABASE_URL") == "" {
+        // also ticker_key is just "209" if running locally
+        config_vars.Ticker_Key = "209"
+
         router.HandleFunc("/ctrl/login", RemoteLoginCommand).Methods("GET")
         router.HandleFunc("/ctrl/get-devices", GetDevicesCommand).Methods("GET")
         router.HandleFunc("/ctrl/register/{mac}", RegisterDeviceCommand).Methods("GET")
@@ -103,8 +110,8 @@ func main() {
     router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
     http.Handle("/", router)
 
-    // start ticker for updating colors
-    startTicker()
+    // start off not live
+    IS_LIVE = false
 
     fmt.Printf("Attempting to run server running on port " + port + "\n")
     err := http.ListenAndServe(":" + port, router) 

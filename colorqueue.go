@@ -61,6 +61,10 @@ func updateColors() string {
 }
 
 func startTicker() {
+    if IS_LIVE {
+        return
+    }
+
     // init light colors
     lights = []string{"000000", "000000", "000000", "000000"}
 
@@ -68,6 +72,8 @@ func startTicker() {
     ticker = time.NewTicker(2 * time.Second)
     lastTimestamp = time.Now().UTC().Format("2006-01-02 15:04:0000")
     fmt.Println("starting time:", lastTimestamp)
+
+    IS_LIVE = true  
 
     go func() {
         for t := range ticker.C {
@@ -81,3 +87,10 @@ func startTicker() {
     }()
 }
 
+func stopTicker() {
+    if !IS_LIVE {
+        return
+    }
+    ticker.Stop()
+    IS_LIVE = false
+}
