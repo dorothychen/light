@@ -27,10 +27,10 @@ func getColorsFromDb() {
         if err != nil {
             // TODOOOOOO probs just continue tbh
         }
+        
+        // track last timestamp seen
+        lastTimestamp = t
     }
-
-    // track last timestamp seen
-    lastTimestamp = t
 
     // TODO what does this actually accomplish; look this up 
     err = rows.Err()
@@ -61,14 +61,21 @@ func updateColors() string {
 }
 
 func startTicker() {
+    // init light colors
+    lights = []string{"000000", "000000", "000000", "000000"}
+
+    // init ticker 
     ticker = time.NewTicker(2 * time.Second)
+    lastTimestamp = time.Now().UTC().Format("2006-01-02 15:04:0000")
+    fmt.Println("starting time:", lastTimestamp)
+
     go func() {
         for t := range ticker.C {
             _ = t
             getColorsFromDb()
-            new_col := updateColors()
+            updateColors()
 
-            fmt.Println(new_col)
+            fmt.Printf("%v\n", lights)
             fmt.Println("ticked:", t, "\t lastTimestamp: " + lastTimestamp)
         }
     }()

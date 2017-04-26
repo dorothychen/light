@@ -104,7 +104,7 @@ func main() {
     http.Handle("/", router)
 
     // start ticker for updating colors
-    // startTicker()
+    startTicker()
 
     fmt.Printf("Attempting to run server running on port " + port + "\n")
     err := http.ListenAndServe(":" + port, router) 
