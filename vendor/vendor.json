@@ -15,6 +15,18 @@
 			"revisionTime": "2017-02-28T22:43:54Z"
 		},
 		{
+			"checksumSHA1": "uTUsjF7bymOuKvXbW2BpkK/w4Vg=",
+			"path": "github.com/lib/pq",
+			"revision": "2704adc878c21e1329f46f6e56a1c387d788ff94",
+			"revisionTime": "2017-03-24T20:46:54Z"
+		},
+		{
+			"checksumSHA1": "Gk3jTNQ5uGDUE0WMJFWcYz9PMps=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "2704adc878c21e1329f46f6e56a1c387d788ff94",
+			"revisionTime": "2017-03-24T20:46:54Z"
+		},
+		{
 			"checksumSHA1": "gl4b04qrtBBOWZFVt1Zf5eRkVDs=",
 			"path": "github.com/vikstrous/zengge-lightcontrol/control",
 			"revision": "6613d030df9fdbfb24debdf69d36787067d0cddb",
