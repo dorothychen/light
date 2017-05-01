@@ -3,7 +3,10 @@ var uH, uS, uB;
 
 //noprotect
 function setup() { 
-  createCanvas(400, 650);
+  var canvas = createCanvas(400, 650);
+  // Move the canvas so it's inside our <div id="sketch">.
+  canvas.parent('sketch');
+
 	background(255);
 	colorMode(HSB,100);
   noStroke();
