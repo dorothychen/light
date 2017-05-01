@@ -1,5 +1,6 @@
 var slider, button;
 var uH, uS, uB;
+
 //noprotect
 function setup() { 
   createCanvas(400, 650);
@@ -23,6 +24,9 @@ function setup() {
   button = createButton('Submit');
   button.position(175, 590);
   button.mousePressed(submit);
+
+  isLive();
+
 } 
 
 function draw() { 
@@ -78,6 +82,7 @@ function submit() {
   submitColor(hex);
 }
 
+// TODOOOOOO
 function validateColor(col) {
     if (col.length != 6) {
         return false;
@@ -85,17 +90,37 @@ function validateColor(col) {
     return true;
 }
 
+function isLive() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/ctrl/is-live');
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var resp = JSON.parse(xhr.responseText);
+      if (resp["OK"]) {
+        document.getElementById("live-indicator").style.display = "none";
+      }
+      else {
+       document.getElementById("live-indicator").style.display = "block"; 
+      }
+    }
+    else {
+      console.log('Request failed. Returned status of ' + xhr.status);
+    }
+  };
+  xhr.send();  
+}
+
 function sendRequest(c) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/send-mood/' + c);
     xhr.onload = function() {
-        if (xhr.status === 200) {
-            console.log("success");
-	    window.location.href = 'thanks.html';
-        }
-        else {
-            console.log('Request failed. Returned status of ' + xhr.status);
-        }
+      if (xhr.status === 200) {
+          console.log("success");
+       window.location.href = 'thanks.html';
+      }
+      else {
+          console.log('Request failed. Returned status of ' + xhr.status);
+      }
     };
     xhr.send();
 }

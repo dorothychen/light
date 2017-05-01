@@ -99,9 +99,10 @@ func main() {
     // API
     router.HandleFunc("/send-mood/{color}", SendMoodCommand).Methods("GET")
     router.HandleFunc("/bulb/color/{mac}/{color}", ChangeColorByMacCommand).Methods("GET")
-    router.HandleFunc("/bulb/power/{mac}/{state}", SetPowerByMacCommand).Methods("GET")
+    router.HandleFunc("/bulb/power/{state}", SetPowerAllCommand).Methods("GET")
     router.HandleFunc("/ctrl/start/{key}", StartTickerCommand).Methods("GET")
     router.HandleFunc("/ctrl/stop/{key}", StopTickerCommand).Methods("GET")
+    router.HandleFunc("/ctrl/is-live", IsLiveCommand).Methods("GET")
 
     // only expose if running localhost
     if os.Getenv("DATABASE_URL") == "" {
