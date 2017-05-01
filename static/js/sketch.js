@@ -15,9 +15,8 @@ function setup() {
 	fill(0);
 	uH = random(100);
 	uS = random(100);
-	uB = random(100);
+	uB = 100;
 	makeWheel();
-	makeRec();
   makeMood();
   button = createButton('Submit');
   button.position(175, 590);
@@ -63,8 +62,16 @@ function mouseDragged(){
   	uS = round(map(s,0,width/2,0,100));
     makeRec();
 	}
-	else if (mouseY > 430 && mouseY < 480) {
-		uB = mouseX/4;
+	makeMood();
+}
+
+function mouseClicked() {
+	if (dist(mouseX, mouseY, 200, 200) < 200) {
+		h = Math.atan2((mouseY-200),(mouseX-200));
+		s = dist(mouseX, mouseY, 200, 200);
+		uH = round(map(h,-PI,PI,0,100));
+  	uS = round(map(s,0,width/2,0,100));
+    makeRec();
 	}
 	makeMood();
 }
