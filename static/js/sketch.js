@@ -76,6 +76,12 @@ function mouseClicked() {
 	
 }
 
+function vToHex(v_int) {
+  v = v_int.toString(16);
+  if (v.length == 1) return "0" + v;
+  else return v;
+}
+
 //hsb to rgb to hex
 function submit() {
   print("HSB: " + uH + " ," + uS + ", " + uB);
@@ -84,7 +90,7 @@ function submit() {
   var g = round(green(c));
   var b = round(blue(c));
   print("RGB: " + r + ", " + g + ", " + b);
-  var hex = r.toString(16) + g.toString(16) + b.toString(16);
+  var hex = vToHex(r) + vToHex(g) + vToHex(b);
   print("hex: " + hex);
   submitColor(hex);
 }
@@ -122,8 +128,7 @@ function sendRequest(c) {
     xhr.open('GET', '/send-mood/' + c);
     xhr.onload = function() {
       if (xhr.status === 200) {
-          console.log("success");
-       window.location.href = 'thanks.html';
+        window.location.href = 'thanks.html';
       }
       else {
           console.log('Request failed. Returned status of ' + xhr.status);
@@ -135,7 +140,8 @@ function sendRequest(c) {
 function submitColor(hex) {
     var c = hex;
     if (!validateColor(c)) {
-        return false;
+      console.log("invalid color");
+      return false;
     }
 
     sendRequest(c);
