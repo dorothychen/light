@@ -19,7 +19,18 @@ function setup() {
 	makeWheel();
   makeMood();
   button = createButton('Submit');
-  button.position(175, 590);
+  button.parent('button-submit');
+  button.mouseOver(function(e) {
+    var c = color(uH, uS, uB);
+    var rgb = "rgb(" + round(red(c)) + ", " + round(green(c)) + ", " + round(blue(c)) + ")";
+    e.toElement.style.borderColor = "gray";
+    e.toElement.style.color = "gray";
+  });
+  button.mouseOut(function(e) {
+    e.fromElement.style.borderColor = "black";
+    e.fromElement.style.color = "black";
+    e.fromElement.style.background = "white";
+  });
   button.mouseClicked(submit);
 
   isLive();
