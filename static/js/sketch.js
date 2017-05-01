@@ -60,9 +60,9 @@ function mouseDragged(){
 		s = dist(mouseX, mouseY, 200, 200);
 		uH = round(map(h,-PI,PI,0,100));
   	uS = round(map(s,0,width/2,0,100));
-    makeRec();
+		makeMood();
 	}
-	makeMood();
+	
 }
 
 function mouseClicked() {
@@ -71,9 +71,9 @@ function mouseClicked() {
 		s = dist(mouseX, mouseY, 200, 200);
 		uH = round(map(h,-PI,PI,0,100));
   	uS = round(map(s,0,width/2,0,100));
-    makeRec();
+    makeMood();
 	}
-	makeMood();
+	
 }
 
 //hsb to rgb to hex
