@@ -13,8 +13,6 @@ function setup() {
 	uH = 0;
 	uS = 0;
 	uB = 0;
-  textSize(20);
-  text("Pick a color that represents your mood!", 40, 20);
 	makeWheel();
 	makeRec();
   slider = createSlider(0, 100, 0);
@@ -23,7 +21,7 @@ function setup() {
   makeMood();
   button = createButton('Submit');
   button.position(175, 590);
-  button.mousePressed(submit);
+  button.mouseClicked(submit);
 
   isLive();
 
@@ -57,7 +55,7 @@ function makeMood() {
 	rect(160, 530, 80, 50);
 }
 
-function mouseClicked(){
+function mouseDragged(){
 	if (dist(mouseX, mouseY, 200, 200) < 200) {
 		h = Math.atan2((mouseY-200),(mouseX-200));
 		s = dist(mouseX, mouseY, 200, 200);
