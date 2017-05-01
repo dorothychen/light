@@ -10,9 +10,9 @@ function setup() {
   textSize(16);
   text("Mood", 180, 520);
 	fill(0);
-	uH = rand(100);
-	uS = rand(100);
-	uB = rand(100);
+	uH = random(100);
+	uS = random(100);
+	uB = random(100);
 	makeWheel();
 	makeRec();
   makeMood();
