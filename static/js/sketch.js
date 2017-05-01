@@ -1,4 +1,4 @@
-var slider, button;
+var button;
 var uH, uS, uB;
 
 //noprotect
@@ -15,9 +15,6 @@ function setup() {
 	uB = 0;
 	makeWheel();
 	makeRec();
-  slider = createSlider(0, 100, 0);
-	slider.style('width','400px');
-	slider.position(0, 470);
   makeMood();
   button = createButton('Submit');
   button.position(175, 590);
@@ -63,7 +60,9 @@ function mouseDragged(){
   	uS = round(map(s,0,width/2,0,100));
     makeRec();
 	}
-	uB = slider.value();
+	else if (mouseY > 430 && mouseY < 480) {
+		uB = mouseX/4;
+	}
 	makeMood();
 }
 
