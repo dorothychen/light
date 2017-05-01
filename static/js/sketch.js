@@ -11,7 +11,7 @@ function setup() {
 	colorMode(HSB,100);
   noStroke();
   textSize(16);
-  text("Mood", 180, 520);
+  text("Mood", 180, 420);
 	fill(0);
 	uH = random(100);
 	uS = random(100);
@@ -51,7 +51,7 @@ function makeRec() {
 
 function makeMood() {
   fill(uH, uS, uB);
-	rect(160, 530, 80, 50);
+	rect(160, 430, 80, 50);
 }
 
 function mouseDragged(){
