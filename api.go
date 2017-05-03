@@ -224,16 +224,20 @@ func StopTickerCommand(w http.ResponseWriter, req *http.Request) {
 func StatusCommand(w http.ResponseWriter, req *http.Request) {
     resp := StatusResponse{IsLive: IS_LIVE}
 
-    for _, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
+    for i, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
         remote_ := remote.NewRemoteTransport(rc, mac)
         controller = &control.Controller{remote_}
         state, _ := controller.GetState()
-        resp["light1"] = *state
 
-        // err := _checkBulbState(mac, params["state"])
-        // if err_power != nil {
-        //     fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, params["state"], err_power)
-        // }        
+        if i == 0 {
+            resp.Light1 = *state
+        } else if i == 1{
+            resp.Light2 = *state
+        } else if i == 2 {
+            resp.Light3 = *state
+        } else if i == 3 {
+            resp.Light4 = *state
+        }
     }
 
     json.NewEncoder(w).Encode(resp)
