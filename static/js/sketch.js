@@ -18,7 +18,7 @@ function setup() {
 	centerY = 230;
 	uH = random(100);
 	uS = random(100);
-	uB = 100;
+	uB = 50;
 	makeWheel();
   makeMood();
   button = createButton('Submit');
