@@ -128,11 +128,11 @@ function validateColor(col) {
 
 function isLive() {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/ctrl/is-live');
+  xhr.open('GET', '/ctrl/status');
   xhr.onload = function() {
     if (xhr.status === 200) {
       var resp = JSON.parse(xhr.responseText);
-      if (resp["OK"]) {
+      if (resp["is_live"]) {
         document.getElementById("live-indicator").style.display = "none";
       }
       else {
