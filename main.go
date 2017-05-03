@@ -102,7 +102,7 @@ func main() {
     router.HandleFunc("/bulb/power/{state}", SetPowerAllCommand).Methods("GET")
     router.HandleFunc("/ctrl/start/{key}", StartTickerCommand).Methods("GET")
     router.HandleFunc("/ctrl/stop/{key}", StopTickerCommand).Methods("GET")
-    router.HandleFunc("/ctrl/is-live", IsLiveCommand).Methods("GET")
+    router.HandleFunc("/ctrl/status", StatusCommand).Methods("GET")
 
     // only expose if running localhost
     if os.Getenv("DATABASE_URL") == "" {

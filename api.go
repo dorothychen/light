@@ -25,6 +25,14 @@ type SuccessResponse struct {
     OK       bool           `json:"OK"`
 }
 
+type StatusResponse struct {
+    IsLive  bool          `json:"is_live"`
+    Light1  control.State        `json:"light1"`
+    Light2  control.State        `json:"light2"`
+    Light3  control.State        `json:"light3"`
+    Light4  control.State        `json:"light4"`
+}
+
 func _checkBulbState () string {
     state, err := controller.GetState()
     ctrl_err := ""
@@ -213,10 +221,20 @@ func StopTickerCommand(w http.ResponseWriter, req *http.Request) {
     json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
 
-func IsLiveCommand(w http.ResponseWriter, req *http.Request) {
-    if IS_LIVE {
-        json.NewEncoder(w).Encode(SuccessResponse{OK: true})
-    } else {
-        json.NewEncoder(w).Encode(SuccessResponse{OK: false})
+func StatusCommand(w http.ResponseWriter, req *http.Request) {
+    resp := StatusResponse{IsLive: IS_LIVE}
+
+    for _, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
+        remote_ := remote.NewRemoteTransport(rc, mac)
+        controller = &control.Controller{remote_}
+        state, _ := controller.GetState()
+        resp["light1"] = *state
+
+        // err := _checkBulbState(mac, params["state"])
+        // if err_power != nil {
+        //     fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, params["state"], err_power)
+        // }        
     }
+
+    json.NewEncoder(w).Encode(resp)
 }
