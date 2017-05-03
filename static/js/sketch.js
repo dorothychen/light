@@ -79,7 +79,7 @@ function mouseDragged(){
 		makeRec();
 		
 	}
-	else(mouseY>430 && mouseY<480) {
+	else if (mouseY>430 && mouseY<480) {
 		uB = mouseX/10;
 	}
 	makeMood();
@@ -93,7 +93,7 @@ function mouseClicked() {
   	        uS = round(map(s,0,width/2,0,100));
 		makeRec();
 	}
-	else(mouseY>430 && mouseY<480) {
+	else if(mouseY>430 && mouseY<480) {
 		uB = mouseX/10;
 	}
 	makeMood();
