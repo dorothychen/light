@@ -99,7 +99,6 @@ func main() {
     // API
     router.HandleFunc("/send-mood/{color}", SendMoodCommand).Methods("GET")
     router.HandleFunc("/bulb/color/{mac}/{color}", ChangeColorByMacCommand).Methods("GET")
-    router.HandleFunc("/bulb/power/{state}", SetPowerAllCommand).Methods("GET")
     router.HandleFunc("/ctrl/start/{key}", StartTickerCommand).Methods("GET")
     router.HandleFunc("/ctrl/stop/{key}", StopTickerCommand).Methods("GET")
     router.HandleFunc("/ctrl/status", StatusCommand).Methods("GET")

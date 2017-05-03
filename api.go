@@ -156,28 +156,47 @@ func _setPowerByMac(mac string, state string) (err *ErrReponse) {
     return nil
 }
 
-func SetPowerAllCommand(w http.ResponseWriter, req *http.Request) {
-    params := mux.Vars(req)
+func _setAllPower(state string) {
     err := ""
-    if params["state"] != "ON" && params["state"] != "OFF" {
+    if state != "ON" && state != "OFF" {
         err = "Please provide a valid state (ON/OFF)"
     }
     if err != "" {
-        json.NewEncoder(w).Encode(ErrReponse{Err: err})
+        fmt.Printf(err)
         return
     }
 
     for i, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
-        err_power := _setPowerByMac(mac, params["state"])
+        err_power := _setPowerByMac(mac, state)
         if err_power != nil {
-            fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, params["state"], err_power)
+            fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, state, err_power)
         }        
     }
 
-    resp := SuccessResponse{OK: true}
-    json.NewEncoder(w).Encode(resp)
-
 }
+
+// func SetPowerAllCommand(w http.ResponseWriter, req *http.Request) {
+//     params := mux.Vars(req)
+//     err := ""
+//     if params["state"] != "ON" && params["state"] != "OFF" {
+//         err = "Please provide a valid state (ON/OFF)"
+//     }
+//     if err != "" {
+//         json.NewEncoder(w).Encode(ErrReponse{Err: err})
+//         return
+//     }
+
+//     for i, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
+//         err_power := _setPowerByMac(mac, params["state"])
+//         if err_power != nil {
+//             fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, params["state"], err_power)
+//         }        
+//     }
+
+//     resp := SuccessResponse{OK: true}
+//     json.NewEncoder(w).Encode(resp)
+
+// }
 
 func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
     params := mux.Vars(req)
@@ -205,6 +224,7 @@ func StartTickerCommand(w http.ResponseWriter, req *http.Request) {
         return
     }
 
+    _setAllPower("ON")
     startTicker()
     json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 
@@ -217,6 +237,7 @@ func StopTickerCommand(w http.ResponseWriter, req *http.Request) {
         return
     }
 
+     _setAllPower("OFF")
     stopTicker()
     json.NewEncoder(w).Encode(SuccessResponse{OK: true})
 }
