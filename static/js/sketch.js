@@ -18,8 +18,9 @@ function setup() {
 	centerY = 230;
 	uH = random(100);
 	uS = random(100);
-	uB = 50;
+	uB = random(100);
 	makeWheel();
+	makeRectangle();
   makeMood();
   button = createButton('Submit');
   button.parent('button-submit');
@@ -65,7 +66,7 @@ function makeRec() {
 
 function makeMood() {
   fill(uH, uS, uB);
-  rect(160, 510, 80, 50);
+  rect(160, 530, 80, 50);
   print("H: " + uH + " S: " + uS + " B: " + uB);
 }
 
@@ -75,9 +76,12 @@ function mouseDragged(){
 		s = dist(mouseX, mouseY, centerX, centerY);
 		uH = round(map(h,-PI,PI,0,100));
   	        uS = round(map(s,0,width/2,0,100));
-		makeMood();
+		
 	}
-	
+	else(mouseY>430 && mouseY<480) {
+		uB = mouseX/10;
+	}
+	makeMood();
 }
 
 function mouseClicked() {
@@ -86,8 +90,11 @@ function mouseClicked() {
 		s = dist(mouseX, mouseY, centerX, centerY);
 		uH = round(map(h,-PI,PI,0,100));
   	        uS = round(map(s,0,width/2,0,100));
-		makeMood();
 	}
+	else(mouseY>430 && mouseY<480) {
+		uB = mouseX/10;
+	}
+	makeMood();
 }
 
 function vToHex(v_int) {
