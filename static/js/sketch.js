@@ -65,7 +65,8 @@ function makeRec() {
 
 function makeMood() {
   fill(uH, uS, uB);
-	rect(160, 510, 80, 50);
+  rect(160, 510, 80, 50);
+  print("H: " + uH + " S: " + uS + " B: " + uB);
 }
 
 function mouseDragged(){
