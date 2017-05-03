@@ -1,5 +1,6 @@
 var button;
 var uH, uS, uB;
+var centerX, centerY; // color wheel center
 
 //noprotect
 function setup() { 
@@ -7,12 +8,14 @@ function setup() {
   // Move the canvas so it's inside our <div id="sketch">.
   canvas.parent('sketch');
 
-	background(255);
-	colorMode(HSB,100);
+  background(255);
+  colorMode(HSB,100);
   noStroke();
   textSize(16);
   text("Mood", 180, 500);
 	fill(0);
+	centerX = 200;
+	centerY = 230;
 	uH = random(100);
 	uS = random(100);
 	uB = 100;
@@ -47,7 +50,7 @@ function makeWheel(){
       var hue = map(h,-PI,PI,0,100);
       var sat = map(s,0,width/2,0,100);
       fill(hue,sat,100);
-      ellipse(200+s*cos(h),230+s*sin(h),2,2);
+      ellipse(centerX+s*cos(h),centerY+s*sin(h),2,2);
     }
   }
 }
@@ -66,25 +69,24 @@ function makeMood() {
 }
 
 function mouseDragged(){
-	if (dist(mouseX, mouseY, 200, 200) < 200) {
-		h = Math.atan2((mouseY-200),(mouseX-200));
-		s = dist(mouseX, mouseY, 200, 200);
+	if (dist(mouseX, mouseY, centerX, centerY) < 200) {
+		h = Math.atan2((mouseY-centerY),(mouseX-centerX));
+		s = dist(mouseX, mouseY, centerX, centerY);
 		uH = round(map(h,-PI,PI,0,100));
-  	uS = round(map(s,0,width/2,0,100));
+  	        uS = round(map(s,0,width/2,0,100));
 		makeMood();
 	}
 	
 }
 
 function mouseClicked() {
-	if (dist(mouseX, mouseY, 200, 200) < 200) {
-		h = Math.atan2((mouseY-200),(mouseX-200));
-		s = dist(mouseX, mouseY, 200, 200);
+	if (dist(mouseX, mouseY, centerX, centerY) < 200) {
+		h = Math.atan2((mouseY-centerY),(mouseX-centerX));
+		s = dist(mouseX, mouseY, centerX, centerY);
 		uH = round(map(h,-PI,PI,0,100));
-  	uS = round(map(s,0,width/2,0,100));
-    makeMood();
+  	        uS = round(map(s,0,width/2,0,100));
+		makeMood();
 	}
-	
 }
 
 function vToHex(v_int) {
