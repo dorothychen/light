@@ -20,7 +20,7 @@ function setup() {
 	uS = random(100);
 	uB = random(100);
 	makeWheel();
-	makeRectangle();
+	makeRec();
   makeMood();
   button = createButton('Submit');
   button.parent('button-submit');
@@ -76,6 +76,7 @@ function mouseDragged(){
 		s = dist(mouseX, mouseY, centerX, centerY);
 		uH = round(map(h,-PI,PI,0,100));
   	        uS = round(map(s,0,width/2,0,100));
+		makeRec();
 		
 	}
 	else(mouseY>430 && mouseY<480) {
@@ -90,6 +91,7 @@ function mouseClicked() {
 		s = dist(mouseX, mouseY, centerX, centerY);
 		uH = round(map(h,-PI,PI,0,100));
   	        uS = round(map(s,0,width/2,0,100));
+		makeRec();
 	}
 	else(mouseY>430 && mouseY<480) {
 		uB = mouseX/10;
