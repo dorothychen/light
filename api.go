@@ -172,7 +172,6 @@ func _setAllPower(state string) {
             fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, state, err_power)
         }        
     }
-
 }
 
 // func SetPowerAllCommand(w http.ResponseWriter, req *http.Request) {
@@ -248,16 +247,22 @@ func StatusCommand(w http.ResponseWriter, req *http.Request) {
     for i, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
         remote_ := remote.NewRemoteTransport(rc, mac)
         controller = &control.Controller{remote_}
-        state, _ := controller.GetState()
+        control_res, _ := controller.GetState()
+        
+        // needed so we don't deref a nil state
+        var state control.State
+        if control_res != nil {
+            state = *control_res
+        } 
 
         if i == 0 {
-            resp.Light1 = *state
+            resp.Light1 = state
         } else if i == 1{
-            resp.Light2 = *state
+            resp.Light2 = state
         } else if i == 2 {
-            resp.Light3 = *state
+            resp.Light3 = state
         } else if i == 3 {
-            resp.Light4 = *state
+            resp.Light4 = state
         }
     }
 
