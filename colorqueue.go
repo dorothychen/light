@@ -40,7 +40,7 @@ func getColorsFromDb() {
 }
 
 func initColors() [4]string {
-    rows, err := db.Query("SELECT color FROM colors ORDER BY timestamp LIMIT 4;")
+    rows, err := db.Query("SELECT color FROM colors ORDER BY timestamp DESC LIMIT 4;")
     if err != nil {
         fmt.Println(err)
     }

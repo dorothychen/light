@@ -12,7 +12,7 @@ function setup() {
   colorMode(HSB,100);
   noStroke();
   textSize(16);
-  text("Mood", 180, 500);
+  text("Mood", 180, 520);
 	fill(0);
 	centerX = 200;
 	centerY = 230;
@@ -151,7 +151,7 @@ function sendRequest(c) {
     xhr.open('GET', '/send-mood/' + c);
     xhr.onload = function() {
       if (xhr.status === 200) {
-        window.location.href = 'thanks.html';
+        window.location.href = 'thanks.html/?c=' + c;
       }
       else {
           console.log('Request failed. Returned status of ' + xhr.status);
