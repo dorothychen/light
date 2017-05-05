@@ -8,7 +8,7 @@ import (
 
 var lastTimestamp string
 var Q []string
-var lights []string
+var lights [4]string
 var ticker *time.Ticker
 
 func getColorsFromDb() {
@@ -39,6 +39,37 @@ func getColorsFromDb() {
     }
 }
 
+func initColors() [4]string {
+    rows, err := db.Query("SELECT color FROM colors ORDER BY timestamp LIMIT 4;")
+    if err != nil {
+        fmt.Println(err)
+    }
+    defer rows.Close()
+
+    var colors [4]string
+    i := 0
+    for rows.Next() {
+        err := rows.Scan(&colors[i])
+        i += 1
+
+        if err != nil {
+            // TODOOOOOO probs just continue tbh
+        }
+    }
+
+    for ; i < 4; i++ {
+        colors[i] = "000000"
+    }
+
+    // TODO what does this actually accomplish; look this up 
+    err = rows.Err()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    return colors
+}
+
 func updateColors() string {
     if len(Q) > 0 {
         new_col := Q[0]
@@ -65,15 +96,16 @@ func startTicker() {
         return
     }
 
-    // init light colors
-    lights = []string{"000000", "000000", "000000", "000000"}
-
-    // init ticker 
-    ticker = time.NewTicker(2 * time.Second)
     lastTimestamp = time.Now().UTC().Format("2006-01-02 15:04:0000")
     fmt.Println("starting time:", lastTimestamp)
 
-    IS_LIVE = true  
+    // init light colors
+    lights = initColors()
+
+    // init ticker 
+    ticker = time.NewTicker(2 * time.Second)
+
+    IS_LIVE = true
 
     go func() {
         for t := range ticker.C {

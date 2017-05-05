@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "fmt"
+    "time"
     "log"
     "net/http"
     "encoding/json"
@@ -118,8 +119,16 @@ func main() {
     router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
     http.Handle("/", router)
 
-    // start off not live
-    IS_LIVE = false
+    // start off not live/live depending on time
+    curHour := time.Now().Hour() // in local time!!!
+    fmt.Printf("curHour: %d\n", curHour)
+    if curHour >= 20 || curHour < 4 {
+        _setAllPower("ON")
+        startTicker()
+    } else {
+        _setAllPower("OFF")
+        stopTicker()
+    }    
 
     fmt.Printf("Attempting to run server running on port " + port + "\n")
     err := http.ListenAndServe(":" + port, router) 
