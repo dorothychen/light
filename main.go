@@ -120,9 +120,9 @@ func main() {
     http.Handle("/", router)
 
     // start off not live/live depending on time
-    curHour := time.Now().Hour() // in local time!!!
-    fmt.Printf("curHour: %d\n", curHour)
-    if curHour >= 20 || curHour < 4 {
+    curHour := time.Now().UTC().Hour() 
+    fmt.Printf("curHour in UTC: %d\n", curHour)
+    if curHour >= 0 && curHour < 8 {
         _setAllPower("ON")
         startTicker()
     } else {
