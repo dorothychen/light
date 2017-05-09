@@ -2,6 +2,7 @@ package main
  
 import (
     "encoding/json"
+    "encoding/hex"
     "net/http"
     "github.com/gorilla/mux"
     "github.com/vikstrous/zengge-lightcontrol/control"
@@ -10,6 +11,7 @@ import (
     _ "github.com/lib/pq"
     "database/sql"
     "fmt"
+
 )
 
 
@@ -174,34 +176,29 @@ func _setAllPower(state string) {
     }
 }
 
-// func SetPowerAllCommand(w http.ResponseWriter, req *http.Request) {
-//     params := mux.Vars(req)
-//     err := ""
-//     if params["state"] != "ON" && params["state"] != "OFF" {
-//         err = "Please provide a valid state (ON/OFF)"
-//     }
-//     if err != "" {
-//         json.NewEncoder(w).Encode(ErrReponse{Err: err})
-//         return
-//     }
 
-//     for i, mac := range [4]string{config_vars.Mac1, config_vars.Mac2, config_vars.Mac3, config_vars.Mac4} {
-//         err_power := _setPowerByMac(mac, params["state"])
-//         if err_power != nil {
-//             fmt.Printf("bulb %d: %s failed turning %s. %s\n", i+1, mac, params["state"], err_power)
-//         }        
-//     }
+func colorIsValid (c string) bool {
+    if len(c) != 6 {
+        return false
+    }
+    _, err := hex.DecodeString(c)
+    if err != nil {
+        return false
+    }
+    return true
 
-//     resp := SuccessResponse{OK: true}
-//     json.NewEncoder(w).Encode(resp)
 
-// }
+}
 
 func SendMoodCommand(w http.ResponseWriter, req *http.Request) {
     params := mux.Vars(req)
     if params["color"] == "" {
         json.NewEncoder(w).Encode(ErrReponse{Err: "Invalid color"})
         return
+    }
+    if !colorIsValid(params["color"]) {
+        json.NewEncoder(w).Encode(ErrReponse{Err: "Invalid color"})
+        return        
     }
     
     // put color on queue
